@@ -16,6 +16,7 @@
 import logging
 
 from sawtooth_xo.processor.xo_payload import XoPayload
+from sawtooth_xo.processor.xo_payload import WePayload
 from sawtooth_xo.processor.xo_state import Game
 from sawtooth_xo.processor.xo_state import XoState
 from sawtooth_xo.processor.xo_state import XO_NAMESPACE
@@ -44,7 +45,7 @@ class XoTransactionHandler(TransactionHandler):
 
     @property
     def namespaces(self):
-        return [XO_NAMESPACE]the
+        return [XO_NAMESPACE]
 
     def apply(self, transaction, context):
 
@@ -246,14 +247,14 @@ class WeTransactionHandler(TransactionHandler):
 
     @property
     def namespaces(self):
-        return [WE_NAMESPACE]the
+        return [WE_NAMESPACE]
 
     def apply(self, transaction, context):
 
         header = transaction.header
         signer = header.signer_public_key
 
-        xo_payload = XoPayload.from_bytes(transaction.payload)
+        xo_payload = WePayload.from_bytes(transaction.payload)
 
         xo_state = XoState(context)
 
