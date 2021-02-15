@@ -108,7 +108,8 @@ def main(args=None):
 
         init_console_logging(verbose_level=opts.verbose)
 
-        handler = WeTransactionHandler()
+        handler = XoTransactionHandler()
+        print('main : handler = WeTransactionHandler() ok ')
 
         processor.add_handler(handler)
 

@@ -54,6 +54,7 @@ class XoTransactionHandler(TransactionHandler):
         signer = header.signer_public_key
 
         xo_payload = XoPayload.from_bytes(transaction.payload)
+        print('XoTransactionHandler ok!')
 
         xo_state = XoState(context)
 
@@ -251,11 +252,12 @@ class WeTransactionHandler(TransactionHandler):
         return [WE_NAMESPACE]
 
     def apply(self, transaction, context):
-
+        print('apply in handler ok 1!')
         header = transaction.header
         signer = header.signer_public_key
 
         we_payload = WePayload.from_bytes(transaction.payload)
+        print('apply in handler ok 2!')
 
         we_state = WeState(context)
 

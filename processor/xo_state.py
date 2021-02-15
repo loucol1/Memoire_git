@@ -47,6 +47,7 @@ class WeState:
 
     def __init__(self,name):
         self._name = name
+        print('xo_state: init ok')
 
 
 class XoState:

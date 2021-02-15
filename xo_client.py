@@ -165,14 +165,8 @@ class XoClient:
 
         try:
             if data is not None:
-                print("enter data is not NONE")
-                request = urllib.request.Request(
-                'http://rest.api.domain/batches',
-                data,
-                method='POST',
-                headers=headers)
-                result = urllib.request.urlopen(request)
-                #result = requests.post(url, headers=headers, data=data)
+                #print("enter data is not NONE")
+                result = requests.post(url, headers=headers, data=data)
             else:
                 result = requests.get(url, headers=headers)
 
