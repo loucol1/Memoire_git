@@ -33,6 +33,7 @@ class WePayload:
         self._listId = listId
         self._listConsommation = listConsommation
         self._action = action
+        print('We are here in WePayload! :D')
 
     @staticmethod
     def from_bytes(payload):

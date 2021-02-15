@@ -507,7 +507,11 @@ class WeClient:
                      auth_user=None,
                      auth_password=None):
         # Serialization is just a delimited utf-8 encoded string
-        payload = ",".join([action, listId, listConsummer]).encode()
+        listStringId = self._convert_int_list_to_string(listId)
+        listStringConsummer = self._convert_int_list_to_string(listConsummer)
+        print('listStringId =', listStringId)
+        print('listStringConsummer =',listStringConsummer)
+        payload = ",".join([action, listStringId, listStringConsummer]).encode()
 
         # Construct the address
         address = self._get_address(name)
@@ -577,3 +581,8 @@ class WeClient:
             transactions=transactions,
             header_signature=signature)
         return BatchList(batches=[batch])
+    
+    def _convert_int_list_to_string(self, listInt):
+        string_ints = [str(int) for int in listInt]
+        str_of_ints = ",".join(string_ints)
+        return str_of_ints
