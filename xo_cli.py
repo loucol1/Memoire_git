@@ -26,6 +26,7 @@ import pkg_resources
 from colorlog import ColoredFormatter
 
 from sawtooth_xo.xo_client import XoClient
+from sawtooth_xo.xo_client import WeClient
 from sawtooth_xo.xo_exceptions import XoException
 
 
@@ -258,14 +259,31 @@ def add_take_parser(subparsers, parent_parser):
 
 
 
-def add_send_parser(subparsers, parent_parser):
+def add_set_parser(subparsers, parent_parser):
     parser = subparsers.add_parser(
-        'send',
+        'set',
         help='function that we create (under teset)',
         description='Sends a transaction to take a square in the xo game '
         'with the identifier <name>. This transaction will fail if the '
         'specified game does not exist.',
         parents=[parent_parser])
+
+    parser.add_argument(
+        '-name',
+        type=str,
+        help='specify the name of the energy community')
+
+    parser.add_argument(
+        '-listId',
+        type=int,
+        nargs = '+',
+        help='specify the Id of the consummer/producer separated by a space')
+    
+    parser.add_argument(
+        '-listConsummer',
+        type=int,
+        nargs = '+',
+        help='specify the consummtion of each participant separated by a space')
 
     parser.add_argument(
         '--url',
@@ -299,9 +317,10 @@ def add_send_parser(subparsers, parent_parser):
         nargs='?',
         const=sys.maxsize,
         type=int,
-        help='set time, in seconds, to wait for take transaction '
-        'to commit')
+        help='set time, in seconds, to wait for delete transaction to commit')
 
+
+    
 
 
 
@@ -392,7 +411,7 @@ def create_parser(prog_name):
     add_show_parser(subparsers, parent_parser)
     add_take_parser(subparsers, parent_parser)
     add_delete_parser(subparsers, parent_parser)
-    add_send_parser(subparsers, parent_parser)
+    add_set_parser(subparsers, parent_parser)
 
     return parser
 
@@ -527,8 +546,36 @@ def do_delete(args):
 
     print("Response: {}".format(response))
 
-def do_send(args):
-    print("Begin the function do_send")
+def do_set(args):
+    listId = args.listId
+    listConsummer = args.listConsummer
+    name = args.name
+    print(listId)
+    print(listConsummer)
+    print(name)
+
+    url = _get_url(args)
+    keyfile = _get_keyfile(args)
+    auth_user, auth_password = _get_auth_info(args)
+
+    client = WeClient(base_url=url, keyfile=keyfile)
+
+    if args.wait and args.wait > 0:
+        response = client.set(name,
+            listId, listConsummer, wait=args.wait,
+            auth_user=auth_user,
+            auth_password=auth_password)
+    else:
+        response = client.set(name,
+            listId, listConsummer,
+            auth_user=auth_user,
+            auth_password=auth_password)
+
+    print("Response: {}".format(response))
+
+
+
+    
     
 
 def _get_url(args):
@@ -576,8 +623,8 @@ def main(prog_name=os.path.basename(sys.argv[0]), args=None):
         do_take(args)
     elif args.command == 'delete':
         do_delete(args)
-    elif args.command == 'send':
-        do_send(args)
+    elif args.command == 'set':
+        do_set(args)
     else:
         raise XoException("invalid command: {}".format(args.command))
 

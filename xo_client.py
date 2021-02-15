@@ -278,7 +278,7 @@ class XoClient:
 
 
 
-class WeSmartClient:
+class WeClient:
     def __init__(self, base_url, keyfile=None):
 
         self._base_url = base_url
@@ -325,6 +325,16 @@ class WeSmartClient:
             name,
             "take",
             space,
+            wait=wait,
+            auth_user=auth_user,
+            auth_password=auth_password)
+
+    def set(self, name, listId, listConsummer, wait=None, auth_user=None, auth_password=None):
+        return self._send_we_txn(
+            name,
+            "set",
+            listId,
+            listConsummer,
             wait=wait,
             auth_user=auth_user,
             auth_password=auth_password)
@@ -440,6 +450,71 @@ class WeSmartClient:
         header = TransactionHeader(
             signer_public_key=self._signer.get_public_key().as_hex(),
             family_name="xo",
+            family_version="1.0",
+            inputs=[address],
+            outputs=[address],
+            dependencies=[],
+            payload_sha512=_sha512(payload),
+            batcher_public_key=self._signer.get_public_key().as_hex(),
+            nonce=hex(random.randint(0, 2**64))
+        ).SerializeToString()
+
+        signature = self._signer.sign(header)
+
+        transaction = Transaction(
+            header=header,
+            payload=payload,
+            header_signature=signature
+        )
+
+        batch_list = self._create_batch_list([transaction])
+        batch_id = batch_list.batches[0].header_signature
+
+        if wait and wait > 0:
+            wait_time = 0
+            start_time = time.time()
+            response = self._send_request(
+                "batches", batch_list.SerializeToString(),
+                'application/octet-stream',
+                auth_user=auth_user,
+                auth_password=auth_password)
+            while wait_time < wait:
+                status = self._get_status(
+                    batch_id,
+                    wait - int(wait_time),
+                    auth_user=auth_user,
+                    auth_password=auth_password)
+                wait_time = time.time() - start_time
+
+                if status != 'PENDING':
+                    return response
+
+            return response
+
+        return self._send_request(
+            "batches", batch_list.SerializeToString(),
+            'application/octet-stream',
+            auth_user=auth_user,
+            auth_password=auth_password)
+
+
+
+    def _send_we_txn(self, name,
+                     action,
+                     listId,
+                     listConsummer,
+                     wait=None,
+                     auth_user=None,
+                     auth_password=None):
+        # Serialization is just a delimited utf-8 encoded string
+        payload = ",".join([action, listId, listConsummer]).encode()
+
+        # Construct the address
+        address = self._get_address(name)
+
+        header = TransactionHeader(
+            signer_public_key=self._signer.get_public_key().as_hex(),
+            family_name="we",
             family_version="1.0",
             inputs=[address],
             outputs=[address],

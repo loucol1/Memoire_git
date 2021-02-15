@@ -19,6 +19,7 @@ import argparse
 import pkg_resources
 
 from sawtooth_xo.processor.handler import XoTransactionHandler
+from sawtooth_xo.processor.handler import WeTransactionHandler
 from sawtooth_xo.processor.config.xo import XOConfig
 from sawtooth_xo.processor.config.xo import \
     load_default_xo_config
@@ -107,7 +108,7 @@ def main(args=None):
 
         init_console_logging(verbose_level=opts.verbose)
 
-        handler = XoTransactionHandler()
+        handler = WeTransactionHandler()
 
         processor.add_handler(handler)
 

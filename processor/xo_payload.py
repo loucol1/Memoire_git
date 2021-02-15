@@ -33,6 +33,12 @@ class WePayload:
         self._listId = listId
         self._listConsommation = listConsommation
         self._action = action
+
+    @staticmethod
+    def from_bytes(payload):
+        return WePayload(payload=payload)
+
+    
     @property
     def listId(self):
         return self._listId
