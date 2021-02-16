@@ -351,6 +351,25 @@ class WeClient:
         except BaseException:
             return None
 
+    def get(self, auth_user=None, auth_password=None):
+        we_prefix = self._get_prefix()
+
+        result = self._send_request(
+            "batches",
+            auth_user=auth_user,
+            auth_password=auth_password)
+
+        try:
+            encoded_entries = yaml.safe_load(result)["data"]
+
+            return [
+                base64.b64decode(entry["data"]) for entry in encoded_entries
+            ]
+
+        except BaseException:
+            return None
+
+
     def show(self, name, auth_user=None, auth_password=None):
         address = self._get_address(name)
 
@@ -376,7 +395,7 @@ class WeClient:
             raise XoException(err) from err
 
     def _get_prefix(self):
-        return _sha512('xo'.encode('utf-8'))[0:6]
+        return _sha512('we'.encode('utf-8'))[0:6]
 
     def _get_address(self, name):
         xo_prefix = self._get_prefix()
@@ -407,10 +426,11 @@ class WeClient:
 
         try:
             if data is not None:
+                print("apply post")
                 result = requests.post(url, headers=headers, data=data)
             else:
-                print(method = 'GET/batches')
-                result = requests.get(url, method = 'GET/batches', headers=headers)
+                print("apply GET/batches")
+                result = requests.get(url, headers=headers)
 
             if result.status_code == 404:
                 raise XoException("No such game: {}".format(name))

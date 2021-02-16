@@ -320,6 +320,53 @@ def add_set_parser(subparsers, parent_parser):
         help='set time, in seconds, to wait for delete transaction to commit')
 
 
+def add_get_parser(subparsers, parent_parser):
+    parser = subparsers.add_parser(
+        'get',
+        help='function get that we create (under teset)',
+        description='get for all the blocks created',
+        parents=[parent_parser])
+
+    parser.add_argument(
+        '-name',
+        type=str,
+        help='specify the name of the energy community')
+
+    parser.add_argument(
+        '--url',
+        type=str,
+        help='specify URL of REST API')
+
+    parser.add_argument(
+        '--username',
+        type=str,
+        help="identify name of user's private key file")
+
+    parser.add_argument(
+        '--key-dir',
+        type=str,
+        help="identify directory of user's private key file")
+
+    parser.add_argument(
+        '--auth-user',
+        type=str,
+        help='specify username for authentication if REST API '
+        'is using Basic Auth')
+
+    parser.add_argument(
+        '--auth-password',
+        type=str,
+        help='specify password for authentication if REST API '
+        'is using Basic Auth')
+
+    parser.add_argument(
+        '--wait',
+        nargs='?',
+        const=sys.maxsize,
+        type=int,
+        help='set time, in seconds, to wait for delete transaction to commit')
+
+
     
 
 
@@ -412,6 +459,7 @@ def create_parser(prog_name):
     add_take_parser(subparsers, parent_parser)
     add_delete_parser(subparsers, parent_parser)
     add_set_parser(subparsers, parent_parser)
+    add_get_parser(subparsers, parent_parser)
 
     return parser
 
@@ -574,6 +622,14 @@ def do_set(args):
     print("Response: {}".format(response))
 
 
+def do_get(args):
+    print("enter in do_get")
+    url = _get_url(args)
+    auth_user, auth_password = _get_auth_info(args)
+
+    client = WeClient(base_url=url, keyfile=None)
+    data = client.get(auth_user=auth_user, auth_password=auth_password)
+    print(data)
 
     
     
@@ -625,6 +681,8 @@ def main(prog_name=os.path.basename(sys.argv[0]), args=None):
         do_delete(args)
     elif args.command == 'set':
         do_set(args)
+    elif args.command == 'get':
+        do_get(args)
     else:
         raise XoException("invalid command: {}".format(args.command))
 
