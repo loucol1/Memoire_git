@@ -18,6 +18,7 @@ import logging
 from sawtooth_xo.processor.xo_payload import XoPayload
 from sawtooth_xo.processor.xo_payload import WePayload
 from sawtooth_xo.processor.xo_state import Game
+from sawtooth_xo.processor.xo_state import Energy
 from sawtooth_xo.processor.xo_state import XoState
 from sawtooth_xo.processor.xo_state import WeState
 from sawtooth_xo.processor.xo_state import XO_NAMESPACE
@@ -259,4 +260,22 @@ class WeTransactionHandler(TransactionHandler):
         print('apply in handler ok 2!')
 
         we_state = WeState(context)
+
+        if we_payload.action == 'set':
+            energy = we_state.get_energy(we_payload.name)
+
+            if energy is None:
+                energy = Energy(name = we_payload.name, listId = we_payload.listId, listConsummer = we_payload.listConsummer)
+                
+
+            
+            energy.listId = we_payload.listId
+            energy.listConsummer = we_payload.listConsummer
+            energy.name = we_payload.name
+
+            we_state.set_energy(we_payload.name, energy)
+            
+        else:
+            raise InvalidTransaction('Unhandled action in WeTransaction Handler apply: {}'.format(
+                xo_payload.action))
 

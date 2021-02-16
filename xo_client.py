@@ -525,7 +525,7 @@ class WeClient:
         listStringConsummer = self._convert_int_list_to_string(listConsumption)
         print('listStringId =', listStringId)
         print('listStringConsummer =',listStringConsummer)
-        payload = "-".join([action, listStringId, listStringConsummer]).encode()
+        payload = "-".join([name, action, listStringId, listStringConsummer]).encode()
         print('payload = ', payload)
         # Construct the address
         address = self._get_address(name)

@@ -19,7 +19,7 @@ from sawtooth_sdk.processor.exceptions import InvalidTransaction
 class WePayload:
     def __init__(self,payload):
         try:
-           action, listId, listConsommation = payload.decode().split("-")
+           name, action, listId, listConsommation = payload.decode().split("-")
         except ValueError as e:
             raise InvalidTransaction("Invalid payload serialization") from e
         if not listId:
@@ -30,9 +30,10 @@ class WePayload:
             raise InvalidTransaction('Action is required')
         if action not in ('set'):
             raise InvalidTransaction('Invalid action: {}'.format(action))
+        self._name = name
+        self._action = action
         self._listId = listId
         self._listConsommation = listConsommation
-        self._action = action
         print('We are here in WePayload! :D')
 
     @staticmethod
