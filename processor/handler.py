@@ -265,12 +265,12 @@ class WeTransactionHandler(TransactionHandler):
             energy = we_state.get_energy(we_payload.name)
 
             if energy is None:
-                energy = Energy(name = we_payload.name, listId = we_payload.listId, listConsummer = we_payload.listConsummer)
+                energy = Energy(name = we_payload.name, listId = we_payload.listId, listConsumption = we_payload.listConsumption)
                 
 
             
             energy.listId = we_payload.listId
-            energy.listConsummer = we_payload.listConsummer
+            energy.listConsumption = we_payload.listConsumption
             energy.name = we_payload.name
 
             we_state.set_energy(we_payload.name, energy)
@@ -278,4 +278,6 @@ class WeTransactionHandler(TransactionHandler):
         else:
             raise InvalidTransaction('Unhandled action in WeTransaction Handler apply: {}'.format(
                 xo_payload.action))
+        
+        print('end apply')
 

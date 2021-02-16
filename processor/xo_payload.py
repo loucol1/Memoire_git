@@ -19,12 +19,13 @@ from sawtooth_sdk.processor.exceptions import InvalidTransaction
 class WePayload:
     def __init__(self,payload):
         try:
-           name, action, listId, listConsommation = payload.decode().split("-")
+            print('payload.decode() = ', payload.decode())
+            name, action, listId, listConsumption = payload.decode().split("-")
         except ValueError as e:
             raise InvalidTransaction("Invalid payload serialization") from e
         if not listId:
             raise InvalidTransaction('The ID list is required')
-        if not listConsommation:
+        if not listConsumption:
             raise InvalidTransaction('The list of the consumption is required')
         if not action:
             raise InvalidTransaction('Action is required')
@@ -33,7 +34,7 @@ class WePayload:
         self._name = name
         self._action = action
         self._listId = listId
-        self._listConsommation = listConsommation
+        self._listConsumption = listConsumption
         print('We are here in WePayload! :D')
 
     @staticmethod
@@ -46,13 +47,16 @@ class WePayload:
         return self._listId
 
     @property
-    def listConsommation(self):
-        return self._listConsommation
+    def listConsumption(self):
+        return self._listConsumption
 
     @property
     def action(self):
         return self._action
 
+    @property
+    def name(self):
+        return self._name
 
 class XoPayload:
 

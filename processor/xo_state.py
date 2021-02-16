@@ -133,7 +133,7 @@ class WeState:
             {address: state_data},
             timeout=self.TIMEOUT)
     
-    def set_energy(self, energy_name, game):
+    def set_energy(self, energy_name, energy):
         """Store the game in the validator state.
 
         Args:
@@ -144,6 +144,7 @@ class WeState:
         energies = self._load_energy(energy_name=energy_name)
 
         energies[energy_name] = energy
+        print("set_energy in xo_state")
 
         self._store_energy(energy_name, energies=energies)
 
@@ -156,7 +157,7 @@ class WeState:
         Returns:
             (Game): All the information specifying a game.
         """
-
+        print("get_energy in xo_state")
         return self._load_energy(energy_name=energy_name).get(energy_name)
 
 

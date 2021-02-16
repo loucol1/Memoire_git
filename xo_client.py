@@ -351,11 +351,13 @@ class WeClient:
         except BaseException:
             return None
 
-    def get(self, auth_user=None, auth_password=None):
+    def get(self, name, auth_user=None, auth_password=None):
         we_prefix = self._get_prefix()
+        address = self._get_address(name)
+
 
         result = self._send_request(
-            "batches",
+            "state/{}".format(address),
             auth_user=auth_user,
             auth_password=auth_password)
 

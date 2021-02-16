@@ -628,7 +628,7 @@ def do_get(args):
     auth_user, auth_password = _get_auth_info(args)
 
     client = WeClient(base_url=url, keyfile=None)
-    data = client.get(auth_user=auth_user, auth_password=auth_password)
+    data = client.get(args.name, auth_user=auth_user, auth_password=auth_password)
     print(data)
 
     
