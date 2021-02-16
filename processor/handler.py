@@ -252,7 +252,6 @@ class WeTransactionHandler(TransactionHandler):
         return [WE_NAMESPACE]
 
     def apply(self, transaction, context):
-        print('apply in handler ok 1!')
         header = transaction.header
         signer = header.signer_public_key
 

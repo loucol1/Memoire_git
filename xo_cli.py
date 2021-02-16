@@ -280,7 +280,7 @@ def add_set_parser(subparsers, parent_parser):
         help='specify the Id of the consummer/producer separated by a space')
     
     parser.add_argument(
-        '-listConsummer',
+        '-listConsumption',
         type=int,
         nargs = '+',
         help='specify the consummtion of each participant separated by a space')
@@ -596,10 +596,10 @@ def do_delete(args):
 
 def do_set(args):
     listId = args.listId
-    listConsummer = args.listConsummer
+    listConsumption = args.listConsumption
     name = args.name
     print(listId)
-    print(listConsummer)
+    print(listConsumption)
     print(name)
 
     url = _get_url(args)
@@ -610,12 +610,12 @@ def do_set(args):
 
     if args.wait and args.wait > 0:
         response = client.set(name,
-            listId, listConsummer, wait=args.wait,
+            listId, listConsumption, wait=args.wait,
             auth_user=auth_user,
             auth_password=auth_password)
     else:
         response = client.set(name,
-            listId, listConsummer,
+            listId, listConsumption,
             auth_user=auth_user,
             auth_password=auth_password)
 

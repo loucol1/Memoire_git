@@ -323,12 +323,12 @@ class WeClient:
             auth_user=auth_user,
             auth_password=auth_password)
 
-    def set(self, name, listId, listConsummer, wait=None, auth_user=None, auth_password=None):
+    def set(self, name, listId, listConsumption, wait=None, auth_user=None, auth_password=None):
         return self._send_we_txn(
             name,
             "set",
             listId,
-            listConsummer,
+            listConsumption,
             wait=wait,
             auth_user=auth_user,
             auth_password=auth_password)
@@ -516,21 +516,17 @@ class WeClient:
     def _send_we_txn(self, name,
                      action,
                      listId,
-                     listConsummer,
+                     listConsumption,
                      wait=None,
                      auth_user=None,
                      auth_password=None):
         # Serialization is just a delimited utf-8 encoded string
         listStringId = self._convert_int_list_to_string(listId)
-        listStringConsummer = self._convert_int_list_to_string(listConsummer)
+        listStringConsummer = self._convert_int_list_to_string(listConsumption)
         print('listStringId =', listStringId)
         print('listStringConsummer =',listStringConsummer)
         payload = "-".join([action, listStringId, listStringConsummer]).encode()
         print('payload = ', payload)
-        action2, listId2, listConsommation2 = payload.decode().split("-")
-        print('action2 =', action2)
-        print('listid2 =', listId2)
-        print('listconsommation2 =', listConsommation2)
         # Construct the address
         address = self._get_address(name)
 
