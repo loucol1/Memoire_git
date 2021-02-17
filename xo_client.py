@@ -357,16 +357,17 @@ class WeClient:
 
 
         result = self._send_request(
-            "state/{}".format(address),
+            "blocks",
             auth_user=auth_user,
             auth_password=auth_password)
-
+        #print(yaml.safe_load(result))
+        print(yaml.safe_load(result)["data"][0]["batches"][0]["transactions"][0]["payload"])
         try:
-            encoded_entries = yaml.safe_load(result)["data"]
-
-            return [
-                base64.b64decode(entry["data"]) for entry in encoded_entries
-            ]
+            encoded_entries = yaml.safe_load(result)["data"][0]["batches"][0]["transactions"][0]["payload"]
+            print(base64.b64decode(encoded_entries))
+            print("sacha",base64.b64decode(encoded_entries).decode())
+            return base64.b64decode(encoded_entries).decode()
+            
 
         except BaseException:
             return None
@@ -433,6 +434,7 @@ class WeClient:
             else:
                 print("apply GET/batches")
                 result = requests.get(url, headers=headers)
+            print("result = ", result)
 
             if result.status_code == 404:
                 raise XoException("No such game: {}".format(name))
