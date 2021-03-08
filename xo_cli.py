@@ -629,7 +629,7 @@ def do_get(args):
 
     client = WeClient(base_url=url, keyfile=None)
     data = client.get(args.name, auth_user=auth_user, auth_password=auth_password)
-    print(data)
+    print("Response : ", data.decode("utf-8"))
 
     
     

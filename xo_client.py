@@ -352,6 +352,24 @@ class WeClient:
             return None
 
     def get(self, name, auth_user=None, auth_password=None):
+
+        address = self._get_address(name)
+        result = self._send_request(
+            "state/{}".format(address),
+            name=name,
+            auth_user=auth_user,
+            auth_password=auth_password)
+        print("result =", result)
+        try:
+            return base64.b64decode(yaml.safe_load(result)["data"])
+
+        except BaseException:
+            return None
+
+
+
+        """
+        
         we_prefix = self._get_prefix()
         address = self._get_address(name)
 
@@ -371,7 +389,7 @@ class WeClient:
 
         except BaseException:
             return None
-
+        """
 
     def show(self, name, auth_user=None, auth_password=None):
         address = self._get_address(name)
