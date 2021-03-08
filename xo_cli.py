@@ -639,7 +639,7 @@ def _get_url(args):
 
 
 def _get_keyfile(args):
-    username = getpass.getuser() if args.username is None else args.username
+    username = "my_key"
     home = os.path.expanduser("~")
     key_dir = os.path.join(home, ".sawtooth", "keys")
 
