@@ -22,7 +22,7 @@ import requests
 import yaml
 import urllib.request
 
-from sawtooth_xo.xo_exceptions import XoException
+from sawtooth_we.we_exceptions import WeException
 
 from sawtooth_signing import create_context
 from sawtooth_signing import CryptoFactory
@@ -52,14 +52,14 @@ class WeClient:
             with open(keyfile) as fd:
                 private_key_str = fd.read().strip()
         except OSError as err:
-            raise XoException(
+            raise WeException(
                 'Failed to read private key {}: {}'.format(
                     keyfile, str(err))) from err
 
         try:
             private_key = Secp256k1PrivateKey.from_hex(private_key_str)
         except ParseError as e:
-            raise XoException(
+            raise WeException(
                 'Unable to load private key: {}'.format(str(e))) from e
 
         self._signer = CryptoFactory(create_context('secp256k1')) \
@@ -99,15 +99,15 @@ class WeClient:
                 auth_password=auth_password)
             return yaml.safe_load(result)['data'][0]['status']
         except BaseException as err:
-            raise XoException(err) from err
+            raise WeException(err) from err
 
     def _get_prefix(self):
         return _sha512('we'.encode('utf-8'))[0:6]
 
     def _get_address(self, name):
-        xo_prefix = self._get_prefix()
+        we_prefix = self._get_prefix()
         game_address = _sha512(name.encode('utf-8'))[0:64]
-        return xo_prefix + game_address
+        return we_prefix + game_address
 
     def _send_request(self,
                       suffix,
@@ -141,18 +141,18 @@ class WeClient:
             print("result = ", result)
 
             if result.status_code == 404:
-                raise XoException("the date and hour: {}".format(name), "is not part of the BlockChain")
+                raise WeException("the date and hour: {}".format(name), "is not part of the BlockChain")
 
             if not result.ok:
-                raise XoException("Error {}: {}".format(
+                raise WeException("Error {}: {}".format(
                     result.status_code, result.reason))
 
         except requests.ConnectionError as err:
-            raise XoException(
+            raise WeException(
                 'Failed to connect to {}: {}'.format(url, str(err))) from err
 
         except BaseException as err:
-            raise XoException(err) from err
+            raise WeException(err) from err
 
         return result.text
 

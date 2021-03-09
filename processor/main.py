@@ -18,15 +18,14 @@ import os
 import argparse
 import pkg_resources
 
-from sawtooth_xo.processor.handler import XoTransactionHandler
-from sawtooth_xo.processor.handler import WeTransactionHandler
-from sawtooth_xo.processor.config.xo import XOConfig
-from sawtooth_xo.processor.config.xo import \
-    load_default_xo_config
-from sawtooth_xo.processor.config.xo import \
-    load_toml_xo_config
-from sawtooth_xo.processor.config.xo import \
-    merge_xo_config
+from sawtooth_we.processor.handler import WeTransactionHandler
+from sawtooth_we.processor.config.we import WeConfig
+from sawtooth_we.processor.config.we import \
+    load_default_we_config
+from sawtooth_we.processor.config.we import \
+    load_toml_we_config
+from sawtooth_we.processor.config.we import \
+    merge_we_config
 
 from sawtooth_sdk.processor.core import TransactionProcessor
 from sawtooth_sdk.processor.log import init_console_logging
@@ -36,7 +35,7 @@ from sawtooth_sdk.processor.config import get_log_dir
 from sawtooth_sdk.processor.config import get_config_dir
 
 
-DISTRIBUTION_NAME = 'sawtooth-xo'
+DISTRIBUTION_NAME = 'sawtooth-we'
 
 
 def parse_args(args):
@@ -67,19 +66,19 @@ def parse_args(args):
     return parser.parse_args(args)
 
 
-def load_xo_config(first_config):
-    default_xo_config = \
-        load_default_xo_config()
+def load_we_config(first_config):
+    default_we_config = \
+        load_default_we_config()
     conf_file = os.path.join(get_config_dir(), 'xo.toml')
 
-    toml_config = load_toml_xo_config(conf_file)
+    toml_config = load_toml_we_config(conf_file)
 
-    return merge_xo_config(
-        configs=[first_config, toml_config, default_xo_config])
+    return merge_we_config(
+        configs=[first_config, toml_config, default_we_config])
 
 
-def create_xo_config(args):
-    return XOConfig(connect=args.connect)
+def create_we_config(args):
+    return WeConfig(connect=args.connect)
 
 
 def main(args=None):
@@ -88,9 +87,9 @@ def main(args=None):
     opts = parse_args(args)
     processor = None
     try:
-        arg_config = create_xo_config(opts)
-        xo_config = load_xo_config(arg_config)
-        processor = TransactionProcessor(url=xo_config.connect)
+        arg_config = create_we_config(opts)
+        we_config = load_we_config(arg_config)
+        processor = TransactionProcessor(url=we_config.connect)
         log_config = get_log_config(filename="xo_log_config.toml")
 
         # If no toml, try loading yaml

@@ -14,5 +14,5 @@
 # ------------------------------------------------------------------------------
 
 
-class XoException(Exception):
+class WeException(Exception):
     pass

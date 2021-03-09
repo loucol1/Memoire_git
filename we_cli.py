@@ -25,11 +25,11 @@ import pkg_resources
 
 from colorlog import ColoredFormatter
 
-from sawtooth_xo.xo_client import WeClient
-from sawtooth_xo.xo_exceptions import XoException
+from sawtooth_we.we_client import WeClient
+from sawtooth_we.we_exceptions import WeException
 
 
-DISTRIBUTION_NAME = 'sawtooth-xo'
+DISTRIBUTION_NAME = 'sawtooth-we'
 
 
 DEFAULT_URL = 'http://127.0.0.1:8008'
@@ -72,16 +72,14 @@ def setup_loggers(verbose_level):
 def add_set_parser(subparsers, parent_parser):
     parser = subparsers.add_parser(
         'set',
-        help='function that we create (under teset)',
-        description='Sends a transaction to take a square in the xo game '
-        'with the identifier <name>. This transaction will fail if the '
-        'specified game does not exist.',
+        help='function to put something on the BlockChain',
+        description='Sends a transaction with the name corresponding to the date and hour of the recorded consumption',
         parents=[parent_parser])
 
     parser.add_argument(
         '-name',
         type=str,
-        help='specify the name of the energy community')
+        help='specify the date and hour of the recorded consumption (be carefull to NOT put spaceces on the name)')
 
     parser.add_argument(
         '-listId',
@@ -140,8 +138,7 @@ def create_parser(prog_name):
     parent_parser = create_parent_parser(prog_name)
 
     parser = argparse.ArgumentParser(
-        description='Provides subcommands to play tic-tac-toe (also known as '
-        'Noughts and Crosses) by sending XO transactions.',
+        description=' ',
         parents=[parent_parser])
 
     subparsers = parser.add_subparsers(title='subcommands', dest='command')
@@ -214,13 +211,13 @@ def main(prog_name=os.path.basename(sys.argv[0]), args=None):
     elif args.command == 'get':
         do_get(args)
     else:
-        raise XoException("invalid command: {}".format(args.command))
+        raise WeException("invalid command: {}".format(args.command))
 
 
 def main_wrapper():
     try:
         main()
-    except XoException as err:
+    except WeException as err:
         print("Error: {}".format(err), file=sys.stderr)
         sys.exit(1)
     except KeyboardInterrupt:
