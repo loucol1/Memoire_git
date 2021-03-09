@@ -158,9 +158,6 @@ def do_set(args):
     listId = args.listId
     listConsumption = args.listConsumption
     name = args.name
-    print(listId)
-    print(listConsumption)
-    print(name)
 
     url = _get_url(args)
     keyfile = _get_keyfile(args)
@@ -170,7 +167,6 @@ def do_set(args):
 
 
 def do_get(args):
-    print("enter in do_get")
     url = _get_url(args)
 
     client = WeClient(base_url=url, keyfile=None)

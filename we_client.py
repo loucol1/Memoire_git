@@ -84,7 +84,6 @@ class WeClient:
             name=name,
             auth_user=auth_user,
             auth_password=auth_password)
-        print("result =", result)
         try:
             return base64.b64decode(yaml.safe_load(result)["data"])
 
@@ -133,12 +132,9 @@ class WeClient:
 
         try:
             if data is not None:
-                print("apply post")
                 result = requests.post(url, headers=headers, data=data)
             else:
-                print("apply GET/batches")
                 result = requests.get(url, headers=headers)
-            print("result = ", result)
 
             if result.status_code == 404:
                 raise WeException("the date and hour: {}".format(name), "is not part of the BlockChain")
@@ -168,10 +164,7 @@ class WeClient:
         # Serialization is just a delimited utf-8 encoded string
         listStringId = self._convert_int_list_to_string(listId)
         listStringConsummer = self._convert_int_list_to_string(listConsumption)
-        print('listStringId =', listStringId)
-        print('listStringConsummer =',listStringConsummer)
         payload = "-".join([name, action, listStringId, listStringConsummer]).encode()
-        print('payload = ', payload)
         # Construct the address
         address = self._get_address(name)
 
